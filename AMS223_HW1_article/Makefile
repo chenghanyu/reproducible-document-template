@@ -60,7 +60,7 @@ clean:
 	-latexmk -c -quiet $(MAINFILE).tex
 
 cleanfigure:
-	-rm -rf $(FIGUREDIR)
+	-rm -f $(FIGUREDIR)/*.{aux,out,log,tikz}
 
 cleantex:
 	-rm -f $(MAINTEX) $(RNWTEX)
@@ -71,6 +71,7 @@ clearcache:
 cleanall: clean cleanfigure cleantex clearcache
 	-rm *tikzDictionary
 	-rm $(MAINPDF)
+	-rm -rf $(FIGUREDIR)
 
 
 
