@@ -1,0 +1,237 @@
+---
+title: "isoslides demo"
+author: |
+    | Cheng-Han Yu
+    | Department of Applied Mathematics and Statistics
+    | University of California, Santa Cruz
+date: "September 21, 2016"
+output: 
+  ioslides_presentation:
+    incremental: no
+    logo: ~/Google Drive/Fall2013/soelogo.jpg
+    widescreen: yes
+    transition: default
+    css: ioslides_style.css
+    fig_width: 5
+    fig_height: 3
+    fig_caption: true
+    mathjax: "http://example.com/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    keep_md: no
+    template: quarterly_report.html
+---
+
+# Use one hash (#) to create a section
+
+## Use two hashes (##) to set a frame's header
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Section 1 Slide with Bullets {.build}
+
+- Use attribute {.build} to indicate that their content should be displayed incrementally.
+- Slide attributes can be combined if you need to specify more than one
+- For example, ## Getting up {.smaller .build}
+
+
+## Section 1 Slide with R Code and Output {.smaller}
+- The output will be smaller if we add {.smaller} on the frame header
+```{r}
+summary(cars)
+```
+
+## Section 1 Slide with R Code and Output (original output) {.flexbox .vcenter}
+
+```{r}
+summary(cars)
+```
+
+
+## Section 1 Slide with Plot 
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+# In the morning
+
+## Getting up | What I like to do first thing
+
+- Add a subtitle to a slide or section by including text after the pipe (|) character
+- For example, Getting up | What I like to do first thing
+
+---- 
+
+- use four hyphens (- - - -) to create a new frame without a header
+
+
+----
+
+- add picture using 
+```md
+![caption](path) 
+```
+- ![picture of SOE](~/Google Drive/Fall2013/soelogo.jpg)
+
+## Display Modes
+
+- 'f' enable fullscreen mode
+- 'w' toggle widescreen mode
+- 'o' enable overview mode
+- 'h' enable code highlight mode
+- 'p' show presenter notes
+
+
+## Going to sleep {#nextsteps .emphasized}
+
+- target specific slides or classes of slice with custom CSS by adding ids or classes to the slides headers within your document
+- For example, Going to sleep {#nextsteps .emphasized} (see ioslides_style.css)
+- Need to use css option in YAML: css: styles.css
+
+
+## Code highlighting
+
+```{r}
+### <b> 
+x <- 10
+y <- x * 2 
+### </b>
+z <- 1 + 3
+yy <- exp(4) + log(10)
+```
+
+## Code - HTML
+```html
+<div class="notes">
+This is my *note*.
+
+- It can contain markdown
+- like this list
+
+</div>
+```
+
+## Code - CSS
+```css
+#nextsteps {
+   color: blue;
+}
+
+.emphasized {
+   font-size: 1.2em;
+}
+```
+
+## Code - R
+```{r, eval = FALSE}
+# load("data/salary.RData")
+data(salary, package="DSC2014Tutorial")
+knitr::opts_chunk$set(warning = FALSE,
+                      echo = FALSE,
+                      message = FALSE)
+```
+
+
+
+
+## Code - Markdown
+```md
+A friend once said:
+
+> It's always better to give
+> than to receive.
+```
+
+```md
+---
+output:
+  ioslides_presentation:
+    incremental: true
+---
+```
+
+
+## Tables {.columns-2}
+```md
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+```
+
+ First Header  | Second Header
+ ------------- | -------------
+ Content Cell  | Content Cell
+ Content Cell  | Content Cell
+
+
+
+
+## Font color
+- Roses are <span style="color:red">red</span>, 
+- violets are <span style="color:blue">blue</span>.
+
+## Add logo
+
+- use option logo: logo.png
+- the rectangular element containing it can be customised with CSS
+- See .gdbar img and .gdbar in ioslides_style.css file
+
+## Layout {.flexbox .vcenter}
+
+- use {.flexbox .vcenter} attributes to center content on a slide
+
+## Layout 2
+- horizontally center content by enclosing it in a div tag with class centered
+
+- <div class="centered">
+This text is centered.
+</div>
+
+## Layout 3
+- two-column layout using the columns-2 class. 
+
+<div class="columns-2">
+  ![](~/Google Drive/Fall2013/soelogo.jpg)
+
+  - Bullet 1
+  - Bullet 2
+  - Bullet 3
+</div>
+
+## Text Color
+
+- color content using base color classes red, blue, green, yellow, and gray (or variations of them e.g. red2, red3, blue2, blue3, etc.)
+
+- <div class="red2 centered">
+This text is red
+</div>
+
+## Presenter mode
+<div class="notes">
+This is my *note*.
+
+- It can contain markdown
+- like this list
+
+</div>
+
+## Math Equations
+- $y = \beta_1x + \beta_0$
+
+## Includes
+- include content in the document header or before/after the document body 
+- includes:
+    + in_header: header.html
+    + before_body: doc_prefix.html
+    + after_body: doc_suffix.html
+    
+    
+## Share Options
+- include a file named _output.yaml within the directory
+- no YAML delimeters or enclosing output object are used in this file
+- _output.yaml
+    + ioslides_presentation:
+    +   widescreen: true
+    +   smaller: true

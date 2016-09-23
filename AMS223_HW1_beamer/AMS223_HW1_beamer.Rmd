@@ -1,0 +1,51 @@
+---
+title: "Beamer demo"
+author: |
+    | Cheng-Han Yu
+    | Department of Applied Mathematics and Statistics
+    | University of California, Santa Cruz
+date: "September 21, 2016"
+output: 
+  beamer_presentation:
+    incremental: no
+    theme: "AnnArbor"
+    colortheme: "dolphin"
+    fonttheme: "structurebold"
+    toc: no
+    slide_level: 2
+    fig_width: 1
+    fig_height: 1
+    fig_caption: yes
+    highlight: tango
+    keep_tex: no
+    
+---
+
+# In the morning
+
+## Getting up
+
+- Turn off alarm
+- Get out of bed
+
+## Breakfast
+
+> - Eat eggs
+> - Drink coffee
+
+
+# In the evening
+
+## Dinner
+
+- Eat spaghetti
+- Drink wine
+
+----
+
+![picture of SOE](soelogo.jpg)
+
+## Going to sleep
+
+- Get in bed
+- Count sheep

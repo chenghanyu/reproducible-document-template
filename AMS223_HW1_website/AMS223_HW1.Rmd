@@ -1,0 +1,154 @@
+---
+title: "AMS223 Time Series Analysis Homework 1"
+author: "Cheng-Han Yu"
+date: "October 10, 2013"
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: no
+    theme: cosmo
+    toc: yes
+  beamer_presentation:
+    theme: AnnArbor
+  ioslides_presentation: default
+  pdf_document:
+    includes:
+      in_header: header.tex
+    keep_tex: no
+    latex_engine: pdflatex
+    number_sections: no
+    template: null
+    toc: no
+  word_document: default
+fontsize: 18pt
+geometry:
+- tmargin=2cm
+- bmargin=2cm
+- lmargin=2cm
+- rmargin=2cm
+documentclass: article
+bibliography: Packages.bib
+---
+
+
+**Textbook**: Prado, R. and M. West (2010) *Time Series - Modeling, Computation and Inference*. New York: Chapman \& Hall/CRC.
+
+# Homework Problems
+1. **Chapter 1 Problem 2** Consider the AR(1) model $y_t = \phi y_{t-1} + \epsilon _t$, with $\epsilon _t \sim N(0, v)$.
+    a. Find the MLE of $(\phi, v)$ for the conditional likelihood.
+    b. Find the MLE of $(\phi, v)$ for the unconditional likelihood (1.17).
+    c. Assume that $v$ is known. Find the MAP estimator of $\phi$ under a uniform prior $p(\phi) = U(\phi|-1, 1)$ for the conditional and unconditional likelihoods.
+
+2. **Chapter 1 Problem 3** Show that the distributions of $(\phi|\mathbf{y}, \mathbf{F}))$ and $(v|\mathbf{y}, \mathbf{F})$ obtained for the AR(1) reference analysis are those given in Example 1.6.
+
+3. **Chapter 2 Problem 4** Show that the distributions of $(\phi|\mathbf{y}, \mathbf{F}))$ and $(v|\mathbf{y}, \mathbf{F}))$ obtained for the AR(1) conjugate analysis are those given in Example 1.7.
+
+4. **Chapter 2 Problem 5** Consider the following models:
+<!--
+    $$
+	\begin{aligned}
+		y_t &= \phi_1 y_{t-1} + \phi _2 y_{t-2} + \epsilon _t \\
+		y_t &= a \cos(2 \pi \omega _0 t) + b \sin(2 \pi \omega _0 t) + \epsilon _t \label{M2}
+	\end{aligned}
+	$$
+	\begin{center} $y_t = \phi_1 y_{t-1} + \phi _2 y_{t-2} + \epsilon _t$ \end{center}
+	\begin{center} $y_t = a \cos(2 \pi \omega _0 t) + b \sin(2 \pi \omega _0 t) + \epsilon _t$ \end{center}
+-->	
+	(@a) $y_t = \phi_1 y_{t-1} + \phi _2 y_{t-2} + \epsilon _t$ 
+	
+	(@b) $y_t = a \cos(2 \pi \omega _0 t) + b \sin(2 \pi \omega _0 t) + \epsilon _t$
+	
+	a. Sample 200 observations from each model using your favorite choice of the parameters. Make sure your choice of $(\phi _1, \phi _2)$ in model (@a) lies in the stationary region. That is, choose $\phi _1$ and $\phi _2$ such that $-1 < \phi _2 < 1$, $\phi _1 < 1 - \phi _2$, and $\phi _1 > \phi _2 - 1$.
+	b. Find the MLEs of the parameters in model (@a) and (@b). Use the conditional likelihood for model (@a).
+	c. Find the MAP estimators of the model parameters under the reference prior. Again, use the conditional likelihood for model (@a).
+	d. Sketch $p(v|y_{1:n})$ and $p(\phi _1, \phi _2 | y_{1:n})$ for model (@a).
+	e. Sketch $p(a, b|y_{1:n})$ and $p(v|y_{1:n})$ in model (@b).
+	f. Perform a conjugate Bayesian analysis, i.e., repeat (c) to (e) assuming conjugate prior distributions in both models. Study the sensitivity of the posterior distributions to the choice of the hyperparameters in the prior.
+	
+5. **Chapter 2 Problem 7** Sample 1000 observations from the model (1.1). Using a prior distribution of the form $p(\phi^{(i)}) = N(m, c)$, for some $c$ and $i = 1, 2$, $p(\theta) = U(\theta|-a, a)$ and $p(v) = IG(\alpha _0, \beta _0)$, obtain samples from the joint posterior distribution by implementing a Metropolis-Hasting algorithm.
+
+6. For each of the Chapter 1 datasets: (a) plot the data; (b) plot the sample autocorrelation functions. For the SOI series: smooth the series using moving averages (try different orders and weights). For the USA GDP time series: plot the first and second differences and the corresponding sample autocorrelation functions. 
+
+Here we cite some R packages, including [@R-knitr]. It also relied on the R packages [@R-coda], [@R-repmis] and [@R-fields].
+```{r pkg, message=FALSE, include=FALSE, echo = FALSE}
+# List of packages
+PackageUsed <- c("knitr", "pscl", "coda", "parallel", 
+"doParallel", "tikzDevice", "mvtnorm", "fields", "repmis")
+# Load packages
+lapply(PackageUsed, library, character.only = TRUE)
+```
+
+```{r externalR, echo = FALSE}
+knitr::read_chunk("AMS223_HW1_P1.R")
+knitr::read_chunk("AMS223_HW1_P4.R")
+knitr::read_chunk("AMS223_HW1_P5.R")
+knitr::read_chunk("AMS_223_HW1_Q6.R")
+```
+
+```{r Q1data, tidy.opts=list(comment=FALSE), echo=FALSE}
+
+```
+
+```{r Q4ts, fig.cap = '200 observations from (3) and (4)', fig.subcap=c('Time Series of (3)', 'Time Series of (4)'), out.width='.4\\linewidth', fig.pos='h', cache=TRUE, echo=FALSE, fig.align='center'}
+
+```
+
+```{r Q5a, tidy.opts=list(comment=FALSE), echo=FALSE}
+
+```
+
+```{r Q5a_plot, tidy.opts=list(comment=FALSE), echo=FALSE, fig.align='center'}
+
+```
+
+```{r Q5MCMCalgo, tidy.opts=list(comment=FALSE), echo=FALSE}
+
+```
+
+
+```{r Q5MCMCplot, fig.width=6, fig.height=6, cache=FALSE, dev = 'pdf', out.height='1\\linewidth', tidy.opts=list(comment=FALSE), echo=FALSE, fig.align='center'}
+
+```
+
+
+```{r Q5MCMCresult, results='asis', tidy.opts=list(comment=FALSE), echo=FALSE, warning = FALSE, message = FALSE, error = FALSE}
+
+```
+
+
+# R Code
+
+```{r show-code, ref.label=all_labels(), eval=FALSE}
+
+```
+
+
+
+# References
+```{r include=FALSE}
+knitr::write_bib(PackageUsed, 'Packages.bib')
+```
+<!--
+
+
+-->
+<!--
+# References
+\setlength{\parindent}{-0.2in}
+\setlength{\leftskip}{0.2in}
+\setlength{\parskip}{8pt}
+\vspace*{-0.2in}
+\noindent
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { 
+      equationNumbers: { 
+            autoNumber: "all",
+            formatNumber: function (n) {return '9.'+n}
+      } 
+  }
+});
+</script>
+
+-->

@@ -1,0 +1,36 @@
+---
+title: "slidy demo"
+author: "Cheng-Han Yu"
+date: "September 21, 2016"
+output: 
+  slidy_presentation:
+    footer: 'Copyright 2014 RStudio'
+---
+# In the morning
+
+## Getting up
+- check the website [Presentations with Slidy](http://rmarkdown.rstudio.com/slidy_presentation_format.html)
+- Turn off alarm
+- Get out of bed
+
+## Breakfast
+
+- Eat eggs
+- Drink coffee
+
+# In the evening
+
+## Dinner
+
+- Eat spaghetti
+- Drink wine
+
+----
+
+
+## Going to sleep
+
+- Get in bed
+- Count sheep
+
+

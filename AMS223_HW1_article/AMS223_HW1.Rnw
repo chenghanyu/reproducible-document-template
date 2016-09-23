@@ -1,0 +1,457 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cheng-Han Yu                                                                 %
+% PhD student of Statistics at UC Santa Cruz                                   %
+% Time Series Analysis HW1                                                     %
+% Due: Oct 10, 2013                                                            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ========================== Article Premeable ===================
+\documentclass[12pt]{article}
+%%%%% Load LaTex packages
+\usepackage[paperwidth=8.5in,left=0.5in,right=0.5in,top=0.5in,bottom=0.5in,paperheight=11in,textheight=8.5in]{geometry}
+\usepackage{hyperref}
+\usepackage[authoryear]{natbib}
+%\usepackage[latin1]{inputenc}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{graphicx}
+%\usepackage{subfigure}
+\usepackage{subfig}
+\usepackage{color}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{overpic}
+\usepackage{colortbl}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+\usepackage{animate}
+\usepackage{framed}
+%\usepackage{subfig}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Corr}{\mathrm{Corr}}
+\newcommand{\Rel}{\mathrm{Rel}}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\bsmu}{\boldsymbol{\mu}}
+\newcommand{\bssigma}{\boldsymbol{\Sigma}}
+\newcommand{\bsPhi}{\boldsymbol{\Phi}}
+\newcommand{\bssig}{\boldsymbol{\sigma}}
+\newcommand{\bsomega}{\boldsymbol{\Omega}}
+\newcommand{\bstheta}{\boldsymbol{\theta}}
+\newcommand{\bsep}{\boldsymbol{\epsilon}}
+\newcommand{\bsbeta}{\boldsymbol{\beta}}
+\newcommand{\bseta}{\boldsymbol{\eta}}
+\newcommand{\bsalpha}{\boldsymbol{\alpha}}
+\newcommand{\bsgamma}{\boldsymbol{\gamma}}
+\newcommand{\bsGamma}{\boldsymbol{\Gamma}}
+%\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfy}{\mathbf{y}}
+\newcommand{\bfY}{\mbox{\boldmath $Y$}}
+\newcommand{\bfF}{\mathbf{F}}
+%\newcommand{\bfF}{\mbox{\boldmath $F$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+\newcommand{\bfT}{\mbox{\boldmath $T$}}
+\newcommand{\bfZ}{\mbox{\boldmath $Z$}}
+\newcommand{\bfC}{\mbox{\boldmath $C$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfP}{\mbox{\boldmath $P$}}
+\newcommand{\bfQ}{\mbox{\boldmath $Q$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfI}{\mbox{\boldmath $I$}}
+\newcommand{\bfu}{\mbox{\boldmath $u$}}
+\newcommand{\bfff}{\mbox{\boldmath $f$}}
+%\newcommand{\bfzeta}{\mbox{\boldmath $\zeta$}}
+\newcommand{\bfxi}{\mbox{\boldmath $\xi$}}
+\newcommand{\bfphi}{\mbox{\boldmath $\phi$}}
+\newcommand{\bftheta}{\mbox{\boldmath $\theta$}}
+\newcommand{\bfomega}{\mbox{\boldmath $\omega$}}
+\newcommand{\bfepsilon}{\mbox{\boldmath $\epsilon$}}
+\newcommand{\bfpsi}{\mbox{\boldmath $\psi$}}
+\newcommand{\bfpi}{\mbox{\boldmath $\pi$}}
+%\newcommand{\Cov}{\mathop{\rm {\mathbb C}ov}\nolimits}%
+\newcommand{\cov}{\mathop{\rm {\mathbb C}ov}\nolimits}%
+%\newcommand{\Var}{\mathop{\rm {\mathbb V}ar}\nolimits}%
+\newcommand{\var}{\mathop{\rm {\mathbb V}ar}\nolimits}%
+\newcommand{\ex}{{\mathbb E}}
+\newcommand{\corr}{\mathop{\rm {\mathbb C}orr}\nolimits}%
+\newcommand{\cor}{\mathop{\rm {\mathbb C}orr}\nolimits}
+%\newcommand{\r}{\Sexpr}
+%\def\sinc{\mathop{\rm sinc}\nolimits}%
+\renewcommand{\Pr}{{\mathbb P}}
+\newcommand{\iid}{\stackrel{\rm iid}{\sim}}
+\newcommand{\ind}[1]{\textbf{1}\{#1\}}
+\lstset{breaklines=true}
+
+
+
+%%%% Set knitr global options
+<<setup, include=FALSE>>=
+#### Global options
+# options(replace.assign=TRUE,width=90)
+# A penalty to be applied when deciding to print numeric values in fixed 
+# or exponential notation
+options(scipen = 1, digits = 3, width = 55)
+
+#### Set chunk options
+# figure options
+library(knitr)
+opts_chunk$set(fig.path='figure/hw1_', fig.align='center', crop = TRUE, 
+               dev = 'png', out.width = "0.49\\linewidth")
+
+# error message options
+opts_chunk$set(warning = FALSE, message = FALSE, error = FALSE)
+# other options: 
+# the width of source code
+# changes in comments won't aff3ect the cache
+opts_chunk$set(tidy.opts = list(width.cutoff = 65), 
+               cache.comments = FALSE, echo = FALSE)
+               
+#### Set hooks
+# set margin like margin = c(2, 3, 1, 1)
+knit_hooks$set(margin = function(before, options, envir) {
+	if (before) {
+		m <- options$margin
+		if (is.numeric(m) && length(m) == 4L) {
+			par(mar = m)
+		}
+	} else NULL
+})
+# crop = TRUE to crop the white margin
+knit_hooks$set(crop = hook_pdfcrop)
+#### Set up aliases for chink options
+set_alias(w = "fig.width", h = "fig.height")
+
+#### Option templates
+opts_template$set(
+fig.large = list(fig.width = 7, fig.height = 5),
+fig.small = list(fig.width = 3.5, fig.height = 3)
+)
+
+#### Set the theme
+# thm <- knit_theme$get("bclear")
+# thm$background
+# thm$foreground
+# knit_theme$set(thm)
+# opts_chunk$set(background = "#f5f5f5")
+
+#### Load and cite R packages
+# List of packages
+PackageUsed <- c("knitr", "pscl", "coda", "parallel", 
+"doParallel", "tikzDevice", "mvtnorm", "fields", "repmis")
+# Load packages
+lapply(PackageUsed, library, character.only = TRUE)
+
+#### Read external R scripts
+read_chunk("../Analysis/AMS223_HW1_P1.R")
+read_chunk('../Analysis/AMS223_HW1_P4.R')
+read_chunk('../Analysis/AMS223_HW1_P5.R')
+read_chunk('../Analysis/AMS_223_HW1_Q6.R')
+@
+
+%\input ../macros.tex
+
+%%%% document body
+\begin{document}
+	\begin{figure}
+		\begin{center}
+			\includegraphics[scale=0.5]{/Users/cheyu/Pictures/soelogo.jpg}
+		\end{center}
+ 	\end{figure}
+ 	\begin{flushright}
+    	AMS 223 Time Series Analysis\\
+    	Homework 1\\
+    	Oct 10 2013\\
+    	\textbf{Cheng-Han Yu}
+ 	\end{flushright}
+
+Textbook: Prado, R. and M. West (2010) \textit{Time Series - Modeling, Computation and Inference}. New York: Chapman \& Hall/CRC.
+
+\section{Homework Problems}
+\begin{enumerate}
+\item \textbf{Chapter 1 Problem 2} Consider the AR(1) model $y_t = \phi y_{t-1} + \epsilon _t$, with $\epsilon _t \sim N(0, v)$.
+\begin{enumerate}
+	\item Find the MLE of $(\phi, v)$ for the conditional likelihood.\\
+	\textbf{Solution:}\\
+	We know $p(y_1|\bstheta) = N(0, v/(1-\phi)^2)$ and $p(y_t|y_{t-1}, \bstheta) = N(y_t|\phi y_{t-1}, v)$, where $\bstheta = (\phi, v)'$. Hence, the conditional likelihood conditional on $y_1$ is
+	\begin{align*}
+		p(y_{2:T}|y_1, \bstheta) &= (2 \pi v)^{-\frac{T-1}{2}} \exp \left(-\frac{\sum _{t=2}^T (y_t- \phi y_{t-1})^2}{2v} \right)\\
+		&\propto (v)^{-\frac{T-1}{2}} \exp \left(-\frac{\sum _{t=2}^T (y_t- \phi y_{t-1})^2}{2v} \right)\\
+	\end{align*}
+	Hence, ther conditional log likelihood is $\log L := \log p(y_{2:T}|y_1, \boldsymbol{\theta}) \propto (-(T-1)/2) \log v - (\sum _{t=2}^T(y_t- \phi y_{t-1})^2/2v)$.
+	To find the MLE of $(\phi, v)$, we solve the two first order conditions:
+	\begin{align}
+		\frac{\partial \log L}{\partial \phi} &= \frac{(-2)\sum _{t=2}^T(y_t- \phi y_{t-1})(-y_{t-1})}{2v} \equiv 0\\  
+		\frac{\partial \log L}{\partial v} &= \frac{-(T-1)}{2v} -\frac{(-1)\sum _{t=2}^T (y_t- \phi y_{t-1})^2}{2v^2} \equiv 0
+	\end{align}
+	By (1), $\sum _{t=2}^T(y_t- \phi y_{t-1})y_{t-1} = 0$. Hence, $$\hat{\phi}_{cMLE} = \left(\sum_{t=2}^T y_{t-1}^2\right)^{-1}\left(\sum_{t=2}^Ty_ty_{t-1}\right)$$.
+	Then by (2), we conclude that $$\hat{v}_{cMLE} = \frac{\sum _{t=2}^T (y_t- \phi y_{t-1})^2}{T-1}$$.
+	
+	To check second order sufficient conditions, we have
+	\begin{align*}
+		\left.\frac{\partial^2 \log L}{\partial \phi ^2} \right| _{(\hat{\phi}_{cMLE}, \hat{v}_{cMLE})} = \frac{-\sum _{t=2}^Ty_{t-1}^2}{v} < 0
+		\end{align*}
+		and
+	\begin{align*}
+		\left.\frac{\partial ^ 2 \log L}{\partial v^2} \right|_{(\hat{\phi}_{cMLE}, \hat{v}_{cMLE})} &= \frac{(T-1)}{2v^2} -\frac{(-1)\sum _{t=2}^T (y_t- \phi y_{t-1})^2}{v^3} =\frac{-(T-1)^3}{Q(\phi)^2} < 0  
+	\end{align*}
+	where $Q(\phi) = \sum _{t=2}^T (y_t- \phi y_{t-1})^2$. Also,
+	\begin{align*}
+		\left( \left.\frac{\partial ^ 2 \log L}{\partial v \partial \phi} \right|_{(\hat{\phi}_{cMLE}, \hat{v}_{cMLE})} \right) ^2 - \left( \left.\frac{\partial^2 \log L}{\partial \phi ^2} \right| _{(\hat{\phi}_{cMLE}, \hat{v}_{cMLE})}\right) \left( \left.\frac{\partial ^ 2 \log L}{\partial v^2} \right|_{(\hat{\phi}_{cMLE}, \hat{v}_{cMLE})}\right) < 0
+	\end{align*}
+	This guarantees that $(\hat{\phi}_{cMLE}, \hat{v}_{cMLE})$ is the MLE of $(\phi, v)$ for the conditional likelihood.
+	
+	<<Q1data, cache=TRUE>>=
+	@
+	<<Q1a>>=
+	@
+
+	We create a AR(1) dataset of size \Sexpr{n} using $\phi = \Sexpr{phi}$, $v = \Sexpr{v}$ with seed number 123456 in \texttt{R}. The conditional MLE for $\phi$ and $v$ are $\hat{\phi}_{cmle} = \Sexpr{phi_cmle}$ and $\hat{v}_{cMLE} = \Sexpr{v_cmle}$, respectively.
+	
+	\item Find the MLE of $(\phi, v)$ for the unconditional likelihood (1.17).\\
+	\textbf{Solution:}\\
+	The equation (1.17) in the text is $p(y_{1:n}|\boldsymbol{\theta}) = \frac{(1 - \phi ^2)^{1/2}}{(2 \pi  v)^{n/2}} \exp \left[ - \frac{Q ^ * (\phi)}{2v} \right]$ with $ Q ^ * (\phi)  = y_1 ^ 2 (1 - \phi ^2) + \sum _{t=2}^n (y_t - \phi y_{t-1})^2$.
+	
+	Since this unconditional likelihood is a nonlinear complicated function, we can use the Newton-Raphson method to obtain the MLE. Before employeeing the Newton-Raphson method, we first calculate its gradient and Hessian matrix.
+	
+	Let $g(\bstheta) = \log p(y_{1:n}|\bstheta) \propto \log(1-\phi^2) - n \log v - Q^*(\phi)/v$. The gradient and Hessian matrix are as follows.
+	\begin{align*}
+		\frac{\partial g}{\partial \phi} &= \frac{-2\phi}{(1-\phi^2)} + (2/v)\left(y_1^2\phi +\sum_{t=2}^n y_yy_{t-1} - \phi \sum_{t=2}^n y_{t-1}^2\right)\\
+		\frac{\partial g}{\partial v} &= (-n/v) + \frac{Q^*(\phi)}{v^2}\\
+		\frac{\partial ^2 g}{\partial \phi^2} &= \frac{-2(1+\phi ^2)}{(1-\phi ^2)^2} + (2/v)\left(y_1^2 - \sum_{t=2}^n y_{t-1}^2\right)\\
+		\frac{\partial ^2 g}{\partial v^2} &= (n/v^2) - \frac{2Q^*(\phi)}{v^3}\\
+		\frac{\partial ^2 g}{\partial \phi \partial v} &=(-2/v^2)\left(y_1^2\phi + \sum_{t=2}^n y_yy_{t-1} + \phi \sum_{t=2}^n y_{t-1}^2 \right)
+	\end{align*}
+	
+
+	After having this information, we can now use the Newton Raphson iteration to get the MLE for $(\phi, v)$. The following shows the unconditional MLE estimators using the Newton-Raphson algorithm. 
+	<<Q1b>>=
+	@
+	The result above uses starting value $\bstheta^{(0)} = (\Sexpr{phi0}, \Sexpr{v0})$. Note that a good starting value $\bstheta^{(0)}$ is important because the algorithm may not converge for values in regions where the Hessian is not positive definite.
+	
+	\item Assume that $v$ is known. Find the MAP estimator of $\phi$ under a uniform prior $p(\phi) = U(\phi|-1, 1)$ for the conditional and unconditional likelihoods.\\
+	\textbf{Solution:}\\
+	Since $p(\phi) = U(\phi|-1, 1) = 1/2$ if $\phi \in (-1, 1)$, for conditional likelihood, the posterior is proportional to the conditional likelihood times an indicator function $I_{(-1, 1)}(\phi)$. Hence, the MAP for conditional likelihood is 
+	\begin{equation*}
+		\hat{\phi}_{cMAP} = \frac{\sum_{t=2}^T y_{t-1}^2}{\sum_{t=2}^Ty_ty_{t-1}}
+	\end{equation*}
+	if $\hat{\phi}_{cMAP}\in (-1, 1)$. If the optimal $\phi > 1$, $\hat{\phi}_{cMAP}$ should be 1, and if the optimal $\phi < -1$, $\hat{\phi}_{cMAP}$ should be -1 since conditional likelihood is unimodal (normal) distribution.
+	
+	The unconditional likelihood is similar to the conditional one. But if the function we want to optimize is multimodal, it may be difficult to get the $\hat{\phi}_{MAP}$.
+\end{enumerate}
+	\item \textbf{Chapter 1 Problem 3} Show that the distributions of $(\phi| \bfy, \bfF))$ and $(v|\bfy, \bfF)$ obtained for the AR(1) reference analysis are those given in Example 1.6.\\
+	\textbf{Solution:}\\
+	An AR(1) process can be written as a linear regression model if $\bfy = (y_2, \dots, y_n)', \bfF = (y_1, \dots, y_{n-1})'$, $\phi = \bsbeta$, and $\boldsymbol{\epsilon} = (\epsilon _2, \dots, \epsilon _n)'$ with $\boldsymbol{\epsilon} \sim N(0, v\mathbf{I}_{n-1})$. In this case, $\bfy = \bfF'\bsbeta+\boldsymbol{\epsilon}$ is an AR(1) process.
+	
+	Notice that when using reference prior $p(\bsbeta, v) \propto 1/v$, one has the following results:
+	\begin{itemize}
+		\item $\bsbeta|\mathbf{F, y} \sim T_{n-p} (\boldsymbol{\hat{\beta}}, s^2(\mathbf{FF'})^{-1})$, where the location parameter $\boldsymbol{\hat{\beta}}$ is the MAP for $\bsbeta$, and scale parameter $s^2$ is an estimator for $v$.
+		\item $v|\mathbf{y, F} \sim IG\left( \frac{n-p}{2}, \frac{(n-p)s^2}{2} \right).$
+	\end{itemize}
+	
+	Here, for the AR(1) process, $p = 1$, $n = n-1$, and $\bsbeta = \phi$. So $\phi|\bfy, \bfF \sim T_{n-1-1} (\hat{\phi}, s^2(\mathbf{FF'})^{-1})$. Now we need to find the $\hat{\phi}_{MAP}$ and $s^2$.
+	
+	Since $p(\phi, v|\bfy, \bfF) \propto p(\bfy|\bfF, \phi, v)/v$, for conditional likelihood, $\hat{\phi}_{MAP} = \hat{\phi}_{cMLE}$. Also, under conditional likelihood, Normal likelihood gives us $\hat{\phi}_{cMLE} = \hat{\phi}_{ols}$. Hence, $\hat{\phi}_{MAP} = \hat{\phi}_{ols}$, and $\hat{\phi}_{ols} = (\mathbf{FF'})^{-1}\mathbf{Fy} = \left( \sum_{t = 1}^{n-1} y_t^2 \right)^{-1} \left( \sum_{t=2}^n y_ty_{t-1}\right)$. Thus, the mode $m(y_{1:n}) = \hat{\phi}_{MAP} = \hat{\phi}_{cMLE} = \hat{\phi}_{ols} = \dfrac{ \sum_{t=2}^n y_ty_{t-1}}{\sum_{t = 1}^{n-1} y_t^2}$.
+	
+	Now we have to figure out what the scale is. Instead of using MLE for $v$, $R/(n-1)$, as the estimator for $v$, more usually, one uses the unbiased estimate of $v$, $s^2 = R/(n-1-1)$, where $R = (\mathbf{y - \hat{y}})'(\mathbf{y - \hat{y}}) =  (\mathbf{y - F'\boldsymbol{\hat{\beta}}})'(\mathbf{y - F'\boldsymbol{\hat{\beta}}})$ in general least square models. Here,
+	\begin{align*}
+		R = (\mathbf{y - \hat{y}})'(\mathbf{y - \hat{y}}) &= \mathbf{y'y} - 2\mathbf{(\hat{y}'y)} + \mathbf{\hat{y}'\hat{y}} \\
+		&= \sum_{t = 2}^n y_t^2 - 2\left(\dfrac{ \sum_{t=2}^n y_t y_{t-1}}{\sum_{t = 1}^{n-1} y_t^2} \right) \left( \sum_{t = 2}^n y_t y_{t-1}\right ) + \left( \dfrac{ \sum_{t=2}^n y_t y_{t-1}}{\sum_{t = 1}^{n-1} y_t ^2} \right)^2 \left( \sum_{t = 1}^{n-1} y_t^2 \right)\\
+		&= \sum_{t = 2}^n y_t^2  - 2\dfrac{\left( \sum_{t=2}^n y_t y_{t-1} \right)^2}{\sum_{t = 1}^{n-1} y_t^2} + \dfrac{\left( \sum_{t=2}^n y_t y_{t-1} \right)^2}{\sum_{t = 1}^{n-1} y_t^2} \\
+		&= \sum_{t = 2}^n y_t^2  - \dfrac{\left( \sum_{t=2}^n y_t y_{t-1} \right)^2}{\sum_{t = 1}^{n-1} y_t^2}
+	\end{align*}
+	As a result, 
+	\begin{align*}
+		C(y_{1:n}) &= R(\mathbf{FF'})^{-1}\\
+		&=\left(\sum_{t = 2}^n y_t^2  - \dfrac{\left( \sum_{t=2}^n y_t y_{t-1} \right)^2}{\sum_{t = 1}^{n-1} y_t^2} \right) \left( \sum_{t = 1}^{n-1} y_t^2\right)^{-1}\\
+		&= \frac{\sum_{t = 2}^n y_t^2 \sum_{t = 2}^n y_{t-1}^2 - \left( \sum_{t=2}^n y_t y_{t-1} \right)^2}{ \left( \sum_{t = 1}^{n-1} y_t^2\right)^2}
+	\end{align*}
+	
+	Thus, we conclude that $(\phi|\bfy, \bfF) \sim t_{(n-2)} \left( m(y_{1:n}), \dfrac{C(y_{1:n})}{n-2}\right)$, and $(v|\mathbf{y, F}) \sim IG\left( \frac{n-2}{2}, \frac{(n-2)s^2}{2} \right)$.
+
+
+	\item \textbf{Chapter 2 Problem 4} Show that the distributions of $(\phi|\bfy, \bfF))$ and $(v|\bfy, \bfF))$ obtained for the AR(1) conjugate analysis are those given in Example 1.7.\\
+	\textbf{Solution:}\\
+	From the textbook, we know that in general, when using conjugate priors, $(\bsbeta|y_{1:n}, \bfF, v) \sim N(\mathbf{m}, v\mathbf{C})$, with $\mathbf{m} = \mathbf{m_0} + \mathbf{C_0F}[\mathbf{F'C_0F}+\mathbf{I}_n]^{-1}(\mathbf{y-F'm_0})$, and $\mathbf{C=C_0}-\mathbf{C_0F}[\mathbf{F'C_0F}+\mathbf{I}_n]^{-1}\mathbf{F'C_0}$. Also, $(v|\bfF, y_{1:n}) \sim IG(n^*/2, d^*/2)$ with $n^* = n + n_0$ and $d^*=\mathbf{(y-F'm_0)'[\mathbf{F'C_0F}+\mathbf{I}_{n}]^{-1}(y-F'm_0)} + d_0$.
+
+	By comparing the parameters and coefficients, here, $\mathbf{m_0} = 0$, $\mathbf{C_0} = 1$, $p=1$, $n = n-1$ and the fact that $[\mathbf{DV^{-1}D'+R^{-1}}]^{-1} = \mathbf{R-RD[D'RD+V]^{-1}D'R}$, we have
+	\begin{align*}
+		\mathbf{m} &= \mathbf{m_0} + \mathbf{F[F'C_0F + I_{n-1}]^{-1}(y-F'0)}\\
+		&=\mathbf{F(I-IF'[FF'+1]^{-1}F)y}\\
+		&=\mathbf{Fy - FF'[FF'+1]^{-1}Fy}\\
+		&=\sum_{t=1}^{n-1}y_ty_{t+1} - \left(\sum_{t=1}^{n-1}y_t^2/\left(\sum_{t=1}^{n-1}y_t^2 + 1\right)\right)\sum_{t=1}^{n-1}y_ty_{t+1}\\
+		&=\frac{(\sum_{t=1}^{n-1}y_ty_{t+1})(\sum_{t=1}^{n-1}y_t^2 + 1)-(\sum_{t=1}^{n-1}y_t^2)(\sum_{t=1}^{n-1}y_ty_{t+1})}{\sum_{t=1}^{n-1}y_t^2 + 1}\\
+		&=\frac{\sum_{t=1}^{n-1}y_ty_{t+1}}{\sum_{t=1}^{n-1}y_t^2 + 1}.
+	\end{align*}
+	\begin{align*}
+		\mathbf{C} = C &= 1 - \mathbf{F[F'C_0F + I_{n-1}]^{-1}F'}\\
+		&=1-\mathbf{F(I-IF'[FF'+1]^{-1}F)F'}\\
+		&=1-\mathbf{FF' - FF'[FF'+1]^{-1}FF'}\\
+		&=1-\mathbf{\frac{FF'(FF'+1)-FF'FF'}{FF'+1}}\\
+		&=1-\mathbf{\frac{FF'}{FF'+1}}\\
+		&=\frac{1}{\sum_{t=1}^{n-1}y_t^2 + 1}.
+	\end{align*}
+	Hence, $(\phi|\mathbf{y, F},v) \sim N(m, vC)$ with $m=\dfrac{\sum_{t=1}^{n-1}y_ty_{t+1}}{\sum_{t=1}^{n-1}y_t^2 + 1}$, $C=\dfrac{1}{\sum_{t=1}^{n-1}y_t^2 + 1}$. Also, $n^* = n - 1 + n_0$, and 
+	\begin{align*}
+		d^* &= \mathbf{(y-F'0)'[F'C_0F + I_{n-1}]^{-1}(y-F'0)} + d_0\\
+		&=\mathbf{y'(I-IF'[FF'+1]^{-1}F)y} + d_0\\
+		&=\mathbf{y'y - y'F'[FF'+1]^{-1}Fy} + d_0\\
+		&=\sum_{t=2}^{n}y_t^2 - \frac{\left(\sum_{t=1}^{n-1}y_ty_{t+1}\right)^2}{\sum_{t=1}^{n-1}y_t^2 + 1} + d_0.
+	\end{align*}
+	Hence, $(v|\mathbf{y, F}) \sim IG(n^*/2, d^*/2)$ with $n^* = n - 1 + n_0$ and $d^*=\sum_{t=2}^{n}y_t^2y - \dfrac{\left(\sum_{t=1}^{n-1}y_ty_{t+1}\right)^2}{\sum_{t=1}^{n-1}y_t^2 + 1} + d_0$.
+	
+	
+	\item \textbf{Chapter 2 Problem 5} Consider the following models:
+	\begin{align}
+		y_t &= \phi _1 y_{t-1} + \phi _2 y_{t-2} + \epsilon _t \label{M1} \\
+		y_t &= a \cos(2 \pi \omega _0 t) + b \sin(2 \pi \omega _0 t) + \epsilon _t \label{M2}
+	\end{align}
+	with $\epsilon \sim N(0, v)$.
+	\begin{enumerate}
+		\item Sample 200 observations from each model using your favorite choice of the parameters. Make sure your choice of $(\phi _1, \phi _2)$ in model (\ref{M1}) lies in the stationary region. That is, choose $\phi _1$ and $\phi _2$ such that $-1 < \phi _2 < 1$, $\phi _1 < 1 - \phi _2$, and $\phi _1 > \phi _2 - 1$.\\
+		\textbf{Solution:}\\
+		<<Q4ts, fig.cap = '200 observations from (3) and (4)', fig.subcap=c('Time Series of (3)', 'Time Series of (4)'), out.width='.4\\linewidth', fig.pos='h', cache=TRUE>>=
+		@
+		Figure \ref{fig:Q4ts} shows 200 observations from model \ref{M1} and \ref{M2} with model \ref{M1} parameters $\phi_1 = \Sexpr{phi1}$, $\phi_2 = \Sexpr{phi2}$ and $v = \Sexpr{v}$ and model \ref{M2} parameters $a = \Sexpr{a}$, $b = \Sexpr{b}$ and $\omega_0 = \Sexpr{w0}$.
+		
+		\item Find the MLEs of the parameters in model (\ref{M1}) and (\ref{M2}). Use the conditional likelihood for model (\ref{M1}).\\
+		\textbf{Solution:}\\
+		Both models can be written in a matrix form of linear regression models, $\bfy = \bfF'\bsbeta + \bsep$ and because of Normality, the MLEs for the regression coefficients are OLS estimates, which is of form $\hat{\bsbeta} = (\bfF\bfF')^{-1}\bfF \bfy$. The ML estimate for $v$ is $R / n$, where $R = (\bfy - \bfF'\hat{\bsbeta})'(\bfy - \bfF'\hat{\bsbeta})$.
+		<<Q4b1>>=
+		@
+		<<Q4b2>>=
+		@
+		Hence, given the generated data set, the ML estimate for $(\phi_1, \phi_2)$ are $(\hat{\phi}_{1, MLE}, \hat{\phi}_{2, MLE}) = (\Sexpr{mle1[1]}, \Sexpr{mle1[2]})$. The MLE for $v$ of model (\ref{M1}) is $\hat{v}^{(1)}_{MLE} = \Sexpr{mle_v1}$
+		
+		For model (\ref{M2}), the ML estimates are $(\hat{a}_{MLE}, \hat{b}_{MLE}) = (\Sexpr{mle2[1]}, \Sexpr{mle2[2]})$ and $\hat{v}^{(2)}_{MLE} = \Sexpr{mle_v2}$.
+		
+		\item Find the MAP estimators of the model parameters under the reference prior. Again, use the conditional likelihood for model (\ref{M1}).\\
+		\textbf{Solution:}\\
+		<<Q4c1>>=
+		@
+		<<Q4c2>>=
+		@
+		Under reference prior, OLS estimates for $(\phi_1, \phi_2)$ and $(a, b)$ are also MAPs. Hence $(\hat{\phi}_{1, MAP}, \hat{\phi}_{2, MAP}) = (\Sexpr{map1[1]}, \Sexpr{map1[2]})$ and $(\hat{a}_{MAP}, \hat{b}_{MAP}) = (\Sexpr{map2[1]}, \Sexpr{map2[2]})$. From Problem 2, we learn that $(v|\mathbf{y, F}) \sim IG\left( \frac{n-2}{2}, \frac{(n-2)s^2}{2} \right)$. Hence the MAP for $v$ is $R / n$, and so  $\hat{v}^{(1)}_{MAP} = \Sexpr{map_v1}$ and  $\hat{v}^{(2)}_{MAP} = \Sexpr{map_v2}$.
+		
+		\item Sketch $p(v|y_{1:n})$ and $p(\phi _1, \phi _2 | y_{1:n})$ for model (\ref{M1}).\\
+		\textbf{Solution:}
+%		<<Q4d1v, dev = 'tikz', fig.pos='h', cache=FALSE>>=
+%		@
+%		<<Q4d1phi, h = 2>>=
+%		@
+		Please see Figure \ref{fig:Q4d}.
+		<<Q4d, fig.cap = 'Marginals of $v$ and $(\\phi_1, \\phi_2)$ of model (\\ref{M1}) under reference prior', dev = 'tikz', fig.subcap=c('Marginals of $v$', 'Marginals of $(\\phi_1, \\phi_2)$'), out.width='.4\\linewidth', fig.pos='h', cache=TRUE>>=
+		@
+%		<<tikz, tidy.opts=list(width.cutoff=40), dev='tikz'>>=
+%		# tidy.opts=list(width.cutoff=40), dev='tikz'
+%		library(tikzDevice)
+%		plot(0, type = "n", ann = FALSE)
+%		text(0, paste("$p(\\theta|\\mathbf{x})", "\\propto",
+%		"\\pi(\\theta)f(\\mathbf{x}|\\theta)$"), cex = 2)
+%		@
+		\item Sketch $p(a, b|y_{1:n})$ and $p(a|y_{1:n})$ in model (\ref{M2}).\\
+		\textbf{Solution:}\\
+		Please see Figure \ref{fig:Q4e2}.
+		<<Q4e2, fig.cap = 'Marginals of $v$ and $(a, b)$ of model (\\ref{M2}) under reference prior', dev = 'tikz', fig.subcap=c('Marginals of $v$', 'Marginals of $(a, b)$'), out.width='.4\\linewidth', fig.pos='h', cache=TRUE>>=
+		@
+		
+		\item Perform a conjugate Bayesian analysis, i.e., repeat (c) to (e) assuming conjugate prior distributions in both models. Study the sensitivity of the posterior distributions to the choice of the hyperparameters in the prior.\\
+		\textbf{Solution:}\\
+		<<Q4f1c>>=
+		@
+		<<Q4f2c>>=
+		@
+		For model 1, with the prior $(\phi_1, \phi_2)' \sim N_2(\mathbf{m_0}, \mathbf{C_0})$, where $\mathbf{m_0} = (0.2, -0.5)$ and $\mathbf{C_0} = diag(3, 3)$ and $v \sim IG(n_0, d_0)$ where $n_0 = 10$ and $d_0 = 20$, we have $(\hat{\phi}_{1, MAPconj}, \hat{\phi}_{2, MAPconj}) = (\Sexpr{map1_conj[1]}, \Sexpr{map1_conj[2]})$ and $\hat{v} _{MAPconj}^{(1)} = \Sexpr{map_v1_conj}$.
+		
+		For model 2, we use prior $(a, b)' \sim N_2(\mathbf{m_0}, \mathbf{C_0})$, where $\mathbf{m_0} = (2, 3)$ and $\mathbf{C_0} = diag(1, 2)$ and $v \sim IG(n_0, d_0)$ where $n_0 = 10$ and $d_0 = 20$. Under this setting, we have $(\hat{a}_{1, MAPconj}, \hat{b}_{2, MAPconj}) = (\Sexpr{map2_conj[1]}, \Sexpr{map2_conj[2]})$ and $\hat{v} _{MAPconj}^{(2)} = \Sexpr{map_v2_conj}$
+		
+		Please see Figure \ref{fig:Q4f1d} and Figure \ref{fig:Q4f2e} for marginals under conjugate priors.
+		
+		<<Q4f1d, fig.cap = 'Marginals of $v$ and $(\\phi_1, \\phi_2)$ of model (\\ref{M1}) under conjugate prior', dev = 'tikz', fig.subcap=c('Marginals of $v$', 'Marginals of $(\\phi_1, \\phi_2)$'), out.width='.4\\linewidth', fig.pos='h', cache=TRUE>>=
+		@
+		<<Q4f2e, fig.cap = 'Marginals of $v$ and $(a, b)$ of model (\\ref{M2}) under conjugate prior', dev = 'tikz', fig.subcap=c('Marginals of $v$', 'Marginals of $(a, b)$'), out.width='.4\\linewidth', fig.pos='h', cache=TRUE>>=
+		@
+		
+		Sensitivity analysis can be seen in Figure \ref{fig:Q4f1senv}, \ref{fig:Q4f1senphi}, \ref{fig:Q4f2senv}, \ref{fig:Q4f2senab1} and \ref{fig:Q4f2senab2}.
+		
+		<<Q4f1senv, fig.cap = 'Marginal posterior of $v$ of model 1, sensitivity.', h=3, w=5, out.width='.7\\linewidth', dev = 'tikz', cache=TRUE>>=
+		@
+		<<Q4f1senphi, fig.cap = 'Marginal posterior of $(\\phi_1, \\phi_2)$ of model 1 with same prior of $v$, sensitivity.', h=6, w=6, out.width='.8\\linewidth', dev = 'tikz', cache=TRUE>>=
+		@
+		<<Q4f2senv, fig.cap = 'Marginal posterior of $v$ of model 2, sensitivity.', h=3, w=5, out.width='.7\\linewidth', dev = 'tikz', cache=TRUE>>=
+		@
+		<<Q4f2senab1, fig.cap = 'Marginal posterior of (a, b) of model 2 with the same prior on $v$ and different $\\mathbf{m_0}$s, sensitivity.', h=6, w=6, out.width='.8\\linewidth', dev = 'tikz', cache=TRUE>>=
+		@
+		<<Q4f2senab2, fig.cap = 'Marginal posterior of (a, b) of model 2 with different priors on $v$ and different $\\mathbf{m_0}$s, sensitivity.', h=6, w=6, out.width='.8\\linewidth', dev = 'tikz', cache=TRUE>>=
+		@
+		
+	\end{enumerate}
+		
+	\item \textbf{Chapter 2 Problem 7} Sample 1000 observations from the model (1.1). Using a prior distribution of the form $p(\phi^{(i)}) = N(m, c)$, for some $c$ and $i = 1, 2$, $p(\theta) = U(\theta|-a, a)$ and $p(v) = IG(\alpha _0, \beta _0)$, obtain samples from the joint posterior distribution by implementing a Metropolis-Hasting algorithm.\\
+	\textbf{Solution:}
+	<<Q5a>>=
+	@
+	\begin{figure}
+		<<Q5a_plot>>=
+		@
+		\caption{1000 time series observations of $y$ and $\delta$ from the model (1.1).}
+		\label{Q5a_plot}
+	\end{figure}
+
+	First, we sample 1000 observations from the model (1.1). The $y$ and $\delta$ series shown in Figure \ref{Q5a_plot} look good.
+	
+	<<Q5MCMCalgo, cache=TRUE>>=
+	@
+	\begin{figure}
+		<<Q5MCMCplot, h=6, w=6, cache=FALSE, out.width='.8\\linewidth', dev = 'png'>>=
+		@
+		\caption{Trace plots, ACFs and histograms of $\phi_1$, $\phi_2$, $v$ and $\theta$.}
+		\label{Q5MCMCplot}
+	\end{figure}
+	
+	We can derive full conditionals for $\phi_1$, $\phi_2$ and $v$, and perform Metropolis-Hastings step on $\theta$. A Gaussian random walk proposal is used and the variance is tuned to have reasonable acceptance rate.
+	
+	We use \Sexpr{m} iterations, burn the first \Sexpr{burn} draws and thin the sequence by keeping every \Sexpr{thin}th draw and discarding the rest. Therefore, 2000 draws are stored for analysis. 
+	
+	Initial values are $\phi_1^{(0)} = \Sexpr{Phi1[1]}$, $\phi_2^{(0)} = \Sexpr{Phi2[1]}$, $\theta^{(0)} = \Sexpr{Theta[1]}$ and $v^{(0)} = \Sexpr{V[1]}$
+	
+	Hyperparameters are chosen to be $m = 0$, $c = \Sexpr{c}$, $a = \Sexpr{a}$, $\alpha_0 = \Sexpr{alpha0}$ and $\beta_0 = \Sexpr{beta0}$.
+	
+	<<Q5MCMCresult, results='asis'>>=
+	# label = "MCMCresult"
+	@
+	
+	Table \ref{MCMCresult} summarizes the posterior sample and Figure \ref{Q5MCMCplot} shows trace plots, ACFs and histograms of the parameters from the 2000 draws. 
+\end{enumerate}
+
+
+
+the R package \emph{knitr}
+
+\citep{R-knitr}. It also relied on the R packages
+
+\emph{ggplot2} \citep{R-coda} and \citep{R-repmis} and \citep{R-fields}.
+
+The document can be completely reproduced from
+
+source files available on GitHub at:
+
+\url{https://GitHub.com/christophergandrud/Rep-Res-Examples}.
+
+\clearpage
+\newpage
+\newpage
+\section{Code}
+<<show-code, ref.label=all_labels(), echo=TRUE, eval=FALSE>>=
+@
+
+%%%% Bibliography
+\bibliographystyle{apa}
+\bibliography{../Packages}
+
+\end{document}
+
+
+

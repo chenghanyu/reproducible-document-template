@@ -1,0 +1,25 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\astroncite{Gandrud}{2016}]{R-repmis}
+Gandrud, C. (2016).
+\newblock {\em repmis: Miscellaneous Tools for Reproducible Research}.
+\newblock R package version 0.5.
+
+\bibitem[\protect\astroncite{Nychka et~al.}{2016}]{R-fields}
+Nychka, D., Furrer, R., Paige, J., and Sain, S. (2016).
+\newblock {\em fields: Tools for Spatial Data}.
+\newblock R package version 8.4-1.
+
+\bibitem[\protect\astroncite{Plummer et~al.}{2015}]{R-coda}
+Plummer, M., Best, N., Cowles, K., Vines, K., Sarkar, D., Bates, D., Almond,
+  R., and Magnusson, A. (2015).
+\newblock {\em coda: Output Analysis and Diagnostics for MCMC}.
+\newblock R package version 0.18-1.
+
+\bibitem[\protect\astroncite{Xie}{2016}]{R-knitr}
+Xie, Y. (2016).
+\newblock {\em knitr: A General-Purpose Package for Dynamic Report Generation
+  in R}.
+\newblock R package version 1.14.
+
+\end{thebibliography}
